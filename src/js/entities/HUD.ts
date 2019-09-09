@@ -8,7 +8,14 @@ class ScoreItem extends me.Renderable {
     constructor(x: Number, y: Number) {
         super(x, y, 10, 10);
 
-        console.log('show HUD');
+        // create the font object
+        this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
+
+        // font alignment to right, bottom
+        this.font.textAlign = 'right';
+        this.font.textBaseline = 'bottom';
+
+        // local copy of the global score
         this.score = -1;
     }
 
@@ -23,8 +30,8 @@ class ScoreItem extends me.Renderable {
         return false;
     }
 
-    draw(context: any) {
-        // draw it baby !
+    draw(renderer: any) {
+        this.font.draw(renderer, game.data.score, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
     }
 
 }
@@ -43,7 +50,7 @@ class HUD extends me.Container {
         this.name = "HUD";
 
         // add our child score object at the top left corner
-        this.addChild(new ScoreItem(5, 5));
+        this.addChild(new ScoreItem(-10, -10));
     }
 }
 

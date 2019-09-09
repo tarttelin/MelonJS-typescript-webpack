@@ -1,23 +1,25 @@
 declare var require: any;
 require('../css/main.css');
 import me from './me';
+import EnemyEntity from './entities/enemy';
+import CoinEntity from './entities/coin';
 import PlayerEntity from './entities/player';
 import PlayScreen from './screens/play';
 import TitleScreen from './screens/title';
+import resources from './resources';
 
 
 class Bootstrap {
 
     constructor() {
         // Initialize the video.
-        if (!me.video.init(640, 480, {wrapper : "screen", scale : "flex-width"})) {
+        if (!me.video.init(640, 480, {wrapper : "screen", scale : "flex-width", renderer: me.video.CANVAS })) {
             alert("Your browser does not support HTML5 canvas.");
             return;
         }
 
         // add "#debug" to the URL to enable the debug Panel
         if (document.location.hash === "#debug") {
-            console.log("show debug");
             window.addEventListener('load', () => {
                 me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
             });
@@ -30,7 +32,7 @@ class Bootstrap {
         me.loader.onload = this.loaded.bind(this);
 
         // Load the resources.
-        me.loader.preload({});
+        me.loader.preload(resources);
 
         // Initialize melonJS and display a loading screen.
         me.state.change(me.state.LOADING);
@@ -40,11 +42,23 @@ class Bootstrap {
         me.state.set(me.state.MENU, new TitleScreen());
         me.state.set(me.state.PLAY, new PlayScreen());
 
+        // set a global fading transition for hte screen
+        me.state.transition('fade', '#FFFFFF', 250);
+
         // add our player entity in the entity pool
         me.pool.register("mainPlayer", PlayerEntity);
+        me.pool.register('CoinEntity', CoinEntity);
+        me.pool.register('EnemyEntity', EnemyEntity);
+
+        // enable the keyboard
+        me.input.bindKey(me.input.KEY.LEFT, 'left');
+        me.input.bindKey(me.input.KEY.RIGHT, 'right');
+        // map Up Arrow and Space for jump
+        me.input.bindKey(me.input.KEY.UP, 'jump', true);
+        me.input.bindKey(me.input.KEY.SPACE, 'jump', true);
 
         // Start the game.
-        me.state.change(me.state.PLAY);
+        me.state.change(me.state.MENU);
     }
 
     static boot() {
@@ -68,6 +82,6 @@ class Bootstrap {
     }
 }
 
-window.addEventListener('load', () => {
+window.onload = () => {
     Bootstrap.boot();
-});
+};

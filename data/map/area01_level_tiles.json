@@ -1,0 +1,14 @@
+{ "columns":20,
+ "image":"..\/img\/map\/area01_level_tiles.png",
+ "imageheight":241,
+ "imagewidth":640,
+ "margin":0,
+ "name":"area01_level_tiles",
+ "spacing":0,
+ "tilecount":140,
+ "tiledversion":"1.2.4",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.2
+}
