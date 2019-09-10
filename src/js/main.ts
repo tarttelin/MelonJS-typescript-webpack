@@ -13,6 +13,7 @@ class Bootstrap {
 
     constructor() {
         // Initialize the video.
+        // Note: force using Canvas for rendering as the tutorials don't work on WebGL
         if (!me.video.init(640, 480, {wrapper : "screen", scale : "flex-width", renderer: me.video.CANVAS })) {
             alert("Your browser does not support HTML5 canvas.");
             return;
