@@ -8,7 +8,6 @@ class ScoreItem extends me.Renderable {
     constructor(x: Number, y: Number) {
         super(x, y, 10, 10);
 
-        console.log('show HUD');
         this.score = -1;
     }
 

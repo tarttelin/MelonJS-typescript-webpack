@@ -2,11 +2,14 @@ declare var require: any;
 require('../css/main.css');
 import me from './me';
 import PlayerEntity from './entities/player';
+import EnemyEntity from './entities/enemy';
+import LaserEntity from './entities/laser';
 import PlayScreen from './screens/play';
 import TitleScreen from './screens/title';
-
+import resources from './resources';
 
 class Bootstrap {
+    private playScreen: PlayScreen;
 
     constructor() {
         // Initialize the video.
@@ -30,18 +33,19 @@ class Bootstrap {
         me.loader.onload = this.loaded.bind(this);
 
         // Load the resources.
-        me.loader.preload({});
+        me.loader.preload(resources);
 
         // Initialize melonJS and display a loading screen.
         me.state.change(me.state.LOADING);
     }
 
     loaded() {
-        me.state.set(me.state.MENU, new TitleScreen());
-        me.state.set(me.state.PLAY, new PlayScreen());
+        this.playScreen = new PlayScreen();
+        me.state.set(me.state.PLAY, this.playScreen);
 
-        // add our player entity in the entity pool
-        me.pool.register("mainPlayer", PlayerEntity);
+        me.pool.register('player', PlayerEntity);
+        me.pool.register('enemy', EnemyEntity);
+        me.pool.register('laser', LaserEntity);
 
         // Start the game.
         me.state.change(me.state.PLAY);

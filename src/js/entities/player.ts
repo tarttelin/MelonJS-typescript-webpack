@@ -1,22 +1,40 @@
 import me from '../me';
+import Laser from './laser';
 
 class PlayerEntity extends me.Entity {
 
     constructor(x: Number, y: Number, settings: any) {
-        super(x, y, settings);
-
-        console.log('show player');
+        let image = me.loader.getImage('player');
+        super(
+            me.game.viewport.width / 2 - image.width / 2,
+            me.game.viewport.height - image.height - 20,
+            {
+                image : image,
+                width : 32,
+                height : 32
+            }
+        );
+        this.velx = 450;
+        this.maxX = me.game.viewport.width - this.width;
     }
 
     update(dt: any) {
-        // apply physics to the body (this moves the entity)
-        this.body.update(dt);
+        super.update(dt);
+        if(me.input.isKeyPressed('left')) {
+            this.pos.x -= this.velx * dt / 1000;
+        }
 
-        // handle collisions against other shapes
-        me.collision.check(this);
+        if(me.input.isKeyPressed('right')) {
+            this.pos.x += this.velx * dt / 1000;
+        }
 
-        // return true if we moved or if the renderable was updated
-        return super.update(dt) || this.body.vel.x !== 0 || this.body.vel.y !== 0;
+        this.pos.x = me.Math.clamp(this.pos.x, 0, this.maxX);
+
+        if (me.input.isKeyPressed('shoot')) {
+            me.game.world.addChild(me.pool.pull('laser', this.pos.x - Laser.width, this.pos.y - Laser.height));
+        }
+        
+        return true;
     }
 
     onCollision(response: any, other: any) {
