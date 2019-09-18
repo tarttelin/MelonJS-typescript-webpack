@@ -8,5 +8,7 @@ html, body {
 }
 
 canvas {
+    margin: auto;
+    display: block;
     -webkit-tap-highlight-color: transparent;
 }
